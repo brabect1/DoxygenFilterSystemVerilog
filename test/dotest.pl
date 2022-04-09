@@ -21,11 +21,12 @@ else {
 }
 
 if ($status !=0) {
-   print "Fail";
+   print "Fail\n";
+   print "(diff test.cpp.golden test.cpp)\n";
+   exit(1);
 }
 else {
-   print "Pass";
+   print "Pass\n";
 }
 
-system ("rm -f test.cpp");
 

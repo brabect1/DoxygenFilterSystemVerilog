@@ -68,9 +68,11 @@ default: docs
 # Run Doxygen Script Test
 test:
 	$(DOTEST)
+	@rm -f test.cpp
 
 test_package:
 	$(DOTEST) --package_mode
+	@rm -f test.cpp
 
 # Create the Template SystemVerilog Doxyfile
 $(DOXYFILE_TMPL): $(DOXYFILE_TMPLCONV) $(DOXYFILE_BASE) $(DOXYFILE_SVDELT)
