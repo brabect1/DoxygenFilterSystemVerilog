@@ -577,6 +577,7 @@ foreach (@infile) {
    #                 ...);
    # Current Strategy:
    #   - make look like C++ function that returns type interface
+#TODO   if (!/\bclass\b/ && s/\b(interface|module)(\s+)/\/** \@ingroup SV$1 *\/$1$2/) {
    if (s/\b(interface|module)(\s+)/\/** \@ingroup SV$1 *\/$1$2/) {
 
       if ($1 eq "interface") {
@@ -965,13 +966,13 @@ foreach (@infile) {
    if (/typedef enum/) {
       if (/\benum\b\s+{/) {}
       else {
-         s/\benum\b(.*?){/enum {/;
+         s/\benum\b(.*?)\{/enum \{/;
       }
    }
    else {
       if (/\benum\b\s+{/) {}
       else {
-         s/\benum\b(.*?){/enum {/;
+         s/\benum\b(.*?)\{/enum \{/;
       }
    }
 
