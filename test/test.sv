@@ -1089,6 +1089,57 @@ class mytemplateclass3 #(type T=int, type B=bit) extends mytemplateclass#(bit);
 endclass
 
 /**
+* Interface class.
+*
+* @class test_interface_class
+*/
+interface class test_interface_class;
+   pure virtual function void interface_method(bit a);
+endclass: test_interface_class
+
+/**
+* TODO
+*/
+interface class test_interface_template_class#(type T=int);
+   pure virtual function T interface_template_method(T a);
+endclass
+
+/**
+* TODO
+*/
+class myImplInterface1 implements test_interface_class;
+   virtual function void interface_method(bit a);
+   endfunction
+endclass
+
+/**
+* TODO
+*/
+class myImplInterface2 extends test_class_basic implements test_interface_class;
+   virtual function void interface_method(bit a);
+   endfunction
+endclass
+
+/**
+* TODO
+*/
+class myImplInterface3 implements test_interface_class extends test_class_basic;
+   virtual function void interface_method(bit a);
+   endfunction
+endclass
+
+/**
+* TODO
+*/
+class myImplInterface4 implements test_interface_class, test_interface_template_class#(int);
+   virtual function void interface_method(bit a);
+   endfunction
+   virtual function int interface_template_method(int a);
+      return a;
+   endfunction
+endclass
+
+/**
  * My Template Class4.
  * type T=int
  * extends nothing...

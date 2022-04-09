@@ -1089,6 +1089,57 @@ template  <typename T=int, typename B=bit> class mytemplateclass3 : public mytem
 };
 
 /**
+* Interface class.
+*
+* @class test_interface_class
+*/
+class test_interface_class { public: 
+   virtual  void interface_method(bit a) = 0;
+};
+
+/**
+* TODO
+*/
+template  <typename T=int> class test_interface_template_class   { public: 
+   virtual  T interface_template_method(T a) = 0;
+};
+
+/**
+* TODO
+*/
+class myImplInterface1 : public test_interface_class { public: 
+   virtual  void interface_method(bit a) {
+   }
+};
+
+/**
+* TODO
+*/
+class myImplInterface2 : public test_class_basic , public test_interface_class { public: 
+   virtual  void interface_method(bit a) {
+   }
+};
+
+/**
+* TODO
+*/
+class myImplInterface3 : public test_interface_class , public test_class_basic { public: 
+   virtual  void interface_method(bit a) {
+   }
+};
+
+/**
+* TODO
+*/
+class myImplInterface4 : public test_interface_class, test_interface_template_class <int>  { public: 
+   virtual  void interface_method(bit a) {
+   }
+   virtual  int interface_template_method(int a) {
+      return a;
+   }
+};
+
+/**
  * My Template Class4.
  * type T=int
  * extends nothing...

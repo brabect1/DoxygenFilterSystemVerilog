@@ -106,6 +106,7 @@ my $onelinestringconcat = "";
 my $class = 0;
 my $classname = "";
 my $class_start = 0;
+my $parents = 0;
 my $derived_class = 0;
 my $template_class = 0;
 my $template_class_drop = 0;
@@ -577,8 +578,8 @@ foreach (@infile) {
    #                 ...);
    # Current Strategy:
    #   - make look like C++ function that returns type interface
-#TODO   if (!/\bclass\b/ && s/\b(interface|module)(\s+)/\/** \@ingroup SV$1 *\/$1$2/) {
-   if (s/\b(interface|module)(\s+)/\/** \@ingroup SV$1 *\/$1$2/) {
+   if (!/\bclass\b/ && s/\b(interface|module)(\s+)/\/** \@ingroup SV$1 *\/$1$2/) {
+#TODO   if (s/\b(interface|module)(\s+)/\/** \@ingroup SV$1 *\/$1$2/) {
 
       if ($1 eq "interface") {
          $moduleinterface = 1;
@@ -741,6 +742,7 @@ foreach (@infile) {
       s/\bimport\s+(\w+)::(.*)\s*;//;
       s/\bimport\s+(\w+)\s*;//;
       s/extends\s+(\w+)::(\w+)/extends $2/;
+      #TODO `implements`
    }
 
 
@@ -787,6 +789,11 @@ foreach (@infile) {
    if (/\bclass(\s+)(\S+)/) { # was /class(\s+)(\w+)/ -- but need to support class definition in macros
       $class_start = 1;
       $classname = $2;
+      $parents = 0;
+      # C++ does not have interfaces/interface classes (like e.g. Java does)
+      if (/\binterface\b/) {
+         s/interface\s+class/class/;
+      }
       # C++ does not declare abstract classes (C++ abstract class just has pure methods declared)
       if (/\bvirtual\b/) {
          s/virtual\s+class/class/;
@@ -800,10 +807,12 @@ foreach (@infile) {
       }
    }
    if ($class_start) {
+      s/\bimplements\b/extends/;
       s/\btype /typename /g; # 'typename' and 'class' are equivalent
       if (s/;/ { public: /) { # SV defaults to public; C++ defaults to private
          $class = 1; # we're in a class body
          $class_start = 0;
+         #print "//<2>\n";
          $access_specifier = "public";
       }
       if (/class(\s+)(\S+)(\s*)</) {
@@ -1128,7 +1137,14 @@ foreach (@infile) {
    #  C++: class myderivedclass : public mybaseclass { ...
    # Current Strategy:
    #   - change extends keyword to public access specifier
-   s/\bextends\b/: public/;
+   s/\bextends\b/#public/g;
+   if (/#public/) {
+       if ($parents==0) {
+           s/#public/: public/;
+       }
+       s/#public/, public/g;
+       $parents++;
+   }
 
    # Detect and Skip Full Anything in a String
    # Don't want to convert keywords that are in the body of a string
